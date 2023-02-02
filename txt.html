@@ -1,0 +1,144 @@
+<div class="row form-group" ng-repeat="member in testingAndConsultancy.members track by $index">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-md-11">
+                    <div class="row">
+                      <div class="col-md-3 form-group">
+                        <div>
+                          <label for="category" class="required">Resource Type </label>
+                          <ui-select ng-model="member.category" name="category" theme="bootstrap" validation="required">
+                            <ui-select-match allow-clear="true">{{ $select.selected}}</ui-select-match>
+                            <ui-select-choices repeat="memberType in ['INTERNAL','EXTERNAL']| filter:$select.search">
+                              <div ng-bind-html="memberType | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+                      </div>
+                      <!-- Member Type -->
+                      <div class="col-md-3 form-group" ng-if="member.category=='INTERNAL'">
+                        <div>
+                          <label for="type" class="required">Member Type </label>
+                          <ui-select ng-model="member.type" name="type" theme="bootstrap" validation="required">
+                            <ui-select-match allow-clear="true">{{ $select.selected}}</ui-select-match>
+                            <ui-select-choices repeat="type in ['FACULTY','STUDENT']| filter:$select.search"
+                              ng-click="memberSuggestions($select.search,member.type)">
+                              <div ng-bind-html="type | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+                      </div>
+                      <!-- Member type -->
+                      <div class="col-sm-3 form-group" ng-if="member.category == 'INTERNAL'">
+                        <div>
+                          <label class="required">Members</label>
+                          <div class="column">
+                            <ui-select ng-model="member.details" name="details" theme="bootstrap" validation="required">
+                              <ui-select-match placeholder="Search Members">{{ $select.selected.userName}}
+                              </ui-select-match>
+                              <ui-select-choices repeat="members in details| filter:$select.search"
+                                refresh="memberSuggestions($select.search,member.type)" minimum-input-length="1">
+                                <div ng-bind-html="members.userName | highlight: $select.search"></div>
+                                <small ng-bind-html="members.userId"></small>
+                              </ui-select-choices>
+                            </ui-select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3 form-group"
+                        ng-if="member.category == 'INTERNAL' && member.details.resourceName == 'Others'">
+                        <div>
+                          <label for="otherResource">
+                            <span>Resource Name</span>
+                          </label>
+                          <input id="otherResource" name="otherResource" ng-model="member.details.name"
+                            class="form-control form-control-sm" type="text">
+                        </div>
+                      </div>
+                      <!-- Student/Faculty Name -->
+                      <div class="col-md-3 form-group" ng-if="member.category == 'EXTERNAL'">
+                        <div>
+                          <label for="ResourceName" class="required">
+                            Name
+                          </label>
+                          <input id="ResourceName" name="ResourceName" ng-model="member.details.resourceName"
+                            class="form-control form-control-sm" type="text" validation="required">
+                        </div>
+                      </div>
+                      <!-- organization -->
+                      <div class="col-md-6 form-group" ng-if="member.category =='EXTERNAL'">
+                        <div>
+                          <label for="organization">
+                            organization
+                          </label>
+                          <input id="organization" name="organization" ng-model="member.details.organization"
+                            class="form-control form-control-sm" type="text" validation="required">
+                        </div>
+                      </div>
+                      <!-- Role In Project -->
+                      <div class="col-md-3 form-group">
+                        <div>
+                          <label for="roles">
+                            <span>Role</span>
+                          </label>
+                          <ui-select ng-model="member.role" theme="bootstrap">
+                            <ui-select-match placeholder="Select Role" allow-clear="true">{{$select.selected}}
+                            </ui-select-match>
+                            <ui-select-choices repeat="role in TestingAndConsultancyRoles | filter:$select.search">
+                              <div ng-bind-html="role | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                        </div>
+                      </div>
+                      <!-- Designation -->
+                      <div class="col-md-3 form-group push-10" ng-if="member.category =='EXTERNAL'||!member.category">
+                        <div>
+                          <label for="designation">
+                            Designation
+                          </label>
+                          <input id="designation" name="designation" ng-model="member.details.designation"
+                            class="form-control" type="text">
+                        </div>
+                      </div>
+                      <!-- Email -->
+                      <div class="col-md-3 form-group" ng-if="member.category =='EXTERNAL'">
+                        <div>
+                          <label for="emails" class="required">
+                            Email
+                          </label>
+                          <input id="email" name="email" ng-model="member.details.email"
+                            class="form-control form-control-sm" type="text" validation="required">
+                        </div>
+                      </div>
+                      <div class="col-md-3 form-group push-10" ng-if="member.category =='EXTERNAL'||!member.category">
+                        <div>
+                          <label for="isAlumni">
+                            Alumni
+                          </label>
+                          <div class="row">
+                            <label class="option m-r-20" for="firstPublishedOnline">
+                              <input id="firstPublishedOnline" name="firstPublishedOnline"
+                                ng-model="member.details.isAlumni" type="radio" value="Yes">
+                              <span class="radio"></span> Yes </label>
+                            <label class="option m-r-20" for="notfirstPublishedOnline">
+                              <input id="notfirstPublishedOnline" name="notfirstPublishedOnline"
+                                ng-model="member.details.isAlumni" type="radio" value="No">
+                              <span class="radio"></span> No </label>
+                          </div>
+                        </div>
+
+                        <div>
+                          <input class="d-none" name="firstPublishedOnline1" ng-model="member.details.isAlumni"
+                            validation="required" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-1" ng-if="$index !=0">
+                    <label class="w-100 d-block"> &nbsp; </label>
+                    <a class="btn btn-sm btn-primary mt-1" ng-click="removeMember($index);">
+                      <i class="la la-trash mr-0 text-white"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
